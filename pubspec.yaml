@@ -1,0 +1,32 @@
+name: fisioterapiku
+description: "Aplikasi pemesanan layanan Fisioterapis."
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ">=3.3.4 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  carousel_slider: ^4.2.1
+  ionicons: ^0.2.2
+  google_fonts: ^6.2.1
+  iconsax: ^0.0.8
+  wave: ^0.2.2
+  smooth_page_indicator: ^1.0.1
+  firebase_core: ^2.31.1
+  firebase_auth: ^4.19.6
+  cloud_firestore: ^4.17.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/
+    - google_fonts/
