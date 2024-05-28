@@ -5,10 +5,7 @@ import 'package:fisioterapiku/constants.dart';
 class SearchField extends StatelessWidget {
   final Function(String) onSubmitted;
 
-  const SearchField({
-    super.key,
-    required this.onSubmitted,
-  });
+  const SearchField({super.key, required this.onSubmitted});
 
   @override
   Widget build(BuildContext context) {

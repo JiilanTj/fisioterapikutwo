@@ -27,7 +27,7 @@ class Product {
       description: data['description'] ?? '',
       image: data['image'] ?? '',
       price: data['price'] ?? '',
-      kota: data['kota'] ?? '',
+      kota: data['kota'].toString().toLowerCase() ?? '',
       rate: (data['rate'] ?? 0).toDouble(),
       pertemuan: data['pertemuan'] ?? 0,
     );
@@ -40,7 +40,7 @@ class ProductRepository {
   Future<List<Product>> getProductsByLocation(String location) async {
     QuerySnapshot snapshot = await _firestore
         .collection('products')
-        .where('kota', isEqualTo: location)
+        .where('kota', isEqualTo: location.toLowerCase())
         .get();
 
     return snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();

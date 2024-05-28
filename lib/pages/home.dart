@@ -26,8 +26,10 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> loadProductsByLocation(String location) async {
     ProductRepository productRepository = ProductRepository();
+    // Convert the city name to lowercase before searching
+    String normalizedLocation = location.toLowerCase();
     List<Product> products =
-        await productRepository.getProductsByLocation(location);
+        await productRepository.getProductsByLocation(normalizedLocation);
     setState(() {
       productsList = products;
     });
@@ -70,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Paket dikota Anda, $userCity",
+                      "Paket di kota Anda, ${userCity.capitalize()}",
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -102,5 +104,13 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+}
+
+// Extension to capitalize the first letter of a string
+extension StringCasingExtension on String {
+  String capitalize() {
+    if (isEmpty) return '';
+    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
 }
