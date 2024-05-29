@@ -9,9 +9,6 @@ class Category {
 }
 
 final List<Category> categories = [
-  Category(title: "Medan", image: "assets/shoes.jpg"),
-  Category(title: "Bandung", image: "assets/beauty.png"),
-  Category(title: "Jakarta", image: "assets/pc.jpg"),
-  Category(title: "Surabaya", image: "assets/mobile.jpg"),
-  Category(title: "Yogakarta", image: "assets/watch.png"),
+  Category(title: "Dewasa", image: "assets/shoes.jpg"),
+  Category(title: "Anak-anak", image: "assets/beauty.png"),
 ];

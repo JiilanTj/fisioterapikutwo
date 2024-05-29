@@ -3,9 +3,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:fisioterapiku/constants.dart';
 
 class SearchField extends StatelessWidget {
-  final Function(String) onSubmitted;
-
-  const SearchField({super.key, required this.onSubmitted});
+  const SearchField({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +32,6 @@ class SearchField extends StatelessWidget {
                 hintText: "Search...",
                 border: InputBorder.none,
               ),
-              onSubmitted: onSubmitted,
             ),
           ),
           Container(

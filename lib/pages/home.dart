@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fisioterapiku/constants.dart';
-import 'package:fisioterapiku/models/product.dart';
 import 'package:fisioterapiku/widgets/categories.dart';
 import 'package:fisioterapiku/widgets/home_appbar.dart';
 import 'package:fisioterapiku/widgets/home_slider.dart';
-import 'package:fisioterapiku/widgets/product_card.dart';
 import 'package:fisioterapiku/widgets/search_fields.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,30 +14,25 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int currentSlide = 0;
-  String userCity = '';
-  List<Product> productsList = [];
 
   @override
   void initState() {
     super.initState();
   }
 
-  Future<void> loadProductsByLocation(String location) async {
-    ProductRepository productRepository = ProductRepository();
-    // Convert the city name to lowercase before searching
-    String normalizedLocation = location.toLowerCase();
-    List<Product> products =
-        await productRepository.getProductsByLocation(normalizedLocation);
-    setState(() {
-      productsList = products;
-    });
-  }
+  String getGreetingByTime() {
+    final now = DateTime.now();
+    final hour = now.hour;
 
-  void onCitySubmitted(String city) {
-    setState(() {
-      userCity = city;
-      loadProductsByLocation(city);
-    });
+    if (hour >= 3 && hour < 12) {
+      return 'Pagi';
+    } else if (hour >= 12 && hour < 15) {
+      return 'Siang';
+    } else if (hour >= 15 && hour < 18) {
+      return 'Sore';
+    } else {
+      return 'Malam';
+    }
   }
 
   @override
@@ -48,69 +41,119 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: kscaffoldColor,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const HomeAppBar(),
-                const SizedBox(height: 20),
-                SearchField(onSubmitted: onCitySubmitted),
-                const SizedBox(height: 20),
-                HomeSlider(
-                  onChange: (value) {
-                    setState(() {
-                      currentSlide = value;
-                    });
-                  },
-                  currentSlide: currentSlide,
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const HomeAppBar(),
+              SizedBox(height: 20),
+              SearchField(),
+              SizedBox(height: 20),
+              HomeSlider(
+                onChange: (value) {
+                  setState(() {
+                    currentSlide = value;
+                  });
+                },
+                currentSlide: currentSlide,
+              ),
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                child: Categories(),
+              ),
+              SizedBox(height: 10),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                    'Hubungi Admin sebelum memesan',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 20),
-                const Categories(),
-                const SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ),
+              SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Pilih kategori",
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: Text("Selamat ${getGreetingByTime()}"),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              SizedBox(
+                height: 200, // Atur tinggi sesuai kebutuhan
+                child: Row(
                   children: [
-                    Text(
-                      "Paket di kota Anda, ${userCity.capitalize()}",
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Card(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Image.asset(
+                                'assets/dewasa.jpg',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Dewasa',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text("See all"),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Card(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Image.asset(
+                                'assets/anak.jpg',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Anak-anak',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
-                GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20,
-                  ),
-                  itemCount: productsList.length,
-                  itemBuilder: (context, index) {
-                    return ProductCard(product: productsList[index]);
-                  },
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
-  }
-}
-
-// Extension to capitalize the first letter of a string
-extension StringCasingExtension on String {
-  String capitalize() {
-    if (isEmpty) return '';
-    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
 }

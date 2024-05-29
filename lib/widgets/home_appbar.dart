@@ -18,7 +18,7 @@ class HomeAppBar extends StatelessWidget {
             backgroundColor: kcontentColor,
             padding: const EdgeInsets.all(15),
           ),
-          iconSize: 30,
+          iconSize: 20,
           icon: const Icon(Ionicons.grid_outline),
         ),
         IconButton(
@@ -27,7 +27,7 @@ class HomeAppBar extends StatelessWidget {
             backgroundColor: kcontentColor,
             padding: const EdgeInsets.all(15),
           ),
-          iconSize: 30,
+          iconSize: 20,
           icon: const Icon(Ionicons.notifications_outline),
         ),
       ],

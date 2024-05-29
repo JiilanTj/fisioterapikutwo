@@ -27,7 +27,7 @@ class HomeSlider extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                   image: const DecorationImage(
                     fit: BoxFit.fill,
-                    image: AssetImage("assets/slider.jpg"),
+                    image: AssetImage("assets/banner.jpg"),
                   ),
                 ),
               );
@@ -50,9 +50,9 @@ class HomeSlider extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: currentSlide == index
-                        ? Colors.black
+                        ? Color(0xFF1e8492)
                         : Colors.transparent,
-                    border: Border.all(color: Colors.black),
+                    border: Border.all(color: Color(0xFF1e8492)),
                   ),
                 ),
               ),

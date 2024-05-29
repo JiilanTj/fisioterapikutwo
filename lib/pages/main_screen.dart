@@ -1,95 +1,69 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:fisioterapiku/constants.dart';
 import 'package:fisioterapiku/pages/home.dart';
+import 'package:fisioterapiku/pages/admin.dart';
+import 'package:fisioterapiku/pages/profile_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  const MainScreen({Key? key});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int currentTab = 2;
-  List screens = const [
-    Scaffold(),
-    Scaffold(),
+  int currentTab = 0; // Mulai dengan menu Home terpilih
+
+  final List<Widget> screens = [
     HomePage(),
-    Scaffold(),
-    Scaffold(),
+    AdminPage(), // Placeholder untuk menu Admin (Anda bisa ganti dengan halaman Admin yang sesuai)
+    ProfilePage(),
   ];
 
   @override
   Widget build(BuildContext context) {
+    User? user = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            currentTab = 2;
-          });
-        },
-        shape: const CircleBorder(),
-        backgroundColor: kprimaryColor,
-        child: const Icon(
-          Iconsax.home,
-          color: Colors.white,
+      body: screens[currentTab],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 6,
+              offset: Offset(0, -3),
+            ),
+          ],
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        elevation: 0,
-        height: 70,
-        color: Colors.white,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 5,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              onPressed: () => setState(() {
-                currentTab = 0;
-              }),
-              icon: Icon(
-                Ionicons.grid_outline,
-                color: currentTab == 0 ? kprimaryColor : Colors.grey.shade400,
-              ),
+        child: BottomNavigationBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          selectedItemColor: kprimaryColor,
+          unselectedItemColor: Colors.grey.shade400,
+          currentIndex: currentTab,
+          onTap: (index) {
+            setState(() {
+              currentTab = index;
+            });
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
             ),
-            IconButton(
-              onPressed: () => setState(() {
-                currentTab = 1;
-              }),
-              icon: Icon(
-                Ionicons.heart_outline,
-                color: currentTab == 1 ? kprimaryColor : Colors.grey.shade400,
-              ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.admin_panel_settings),
+              label: 'Admin',
             ),
-            IconButton(
-              onPressed: () => setState(() {
-                currentTab = 3;
-              }),
-              icon: Icon(
-                Ionicons.cart_outline,
-                color: currentTab == 3 ? kprimaryColor : Colors.grey.shade400,
-              ),
-            ),
-            IconButton(
-              onPressed: () => setState(() {
-                currentTab = 4;
-              }),
-              icon: Icon(
-                Ionicons.person_outline,
-                color: currentTab == 4 ? kprimaryColor : Colors.grey.shade400,
-              ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
             ),
           ],
         ),
       ),
-      body: screens[currentTab],
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:fisioterapiku/components/my_button.dart';
 import 'package:fisioterapiku/components/my_textfield.dart';
 import 'package:fisioterapiku/components/square_tile.dart';
 import 'package:fisioterapiku/pages/login_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
@@ -16,18 +17,19 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  // text editing controllers
+  // Text editing controllers
+  final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  // error message
+  // Error message
   String _errorMessage = '';
 
-  // success message
+  // Success message
   String _successMessage = '';
 
-  // sign user up method
+  // Sign user up method
   void signUserUp() async {
     if (passwordController.text != confirmPasswordController.text) {
       setState(() {
@@ -44,18 +46,32 @@ class _RegisterPageState extends State<RegisterPage> {
     );
 
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
-      // pop the loading circle
+
+      // Pop the loading circle
       Navigator.pop(context);
+
+      // Simpan data pengguna ke Firestore
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user?.uid)
+          .set({
+        'nama': nameController.text, // Simpan nama pengguna
+        'email': emailController.text,
+        'alamat': null,
+        'nomor_hp': null,
+      });
+
       setState(() {
         _successMessage =
             'Daftar berhasil, silahkan masuk di halaman Masuk/Login';
       });
     } on FirebaseAuthException catch (e) {
-      // pop the loading circle
+      // Pop the loading circle
       Navigator.pop(context);
 
       if (e.code == 'email-already-in-use') {
@@ -86,7 +102,7 @@ class _RegisterPageState extends State<RegisterPage> {
               children: [
                 const SizedBox(height: 1),
 
-                // logo
+                // Logo
                 Image.asset(
                   'assets/logo.png',
                   width: 200,
@@ -95,7 +111,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                 const SizedBox(height: 1),
 
-                // welcome back, you've been missed!
+                // Welcome message
                 Text(
                   'Halo, Silahkan mendaftar!',
                   style: TextStyle(
@@ -106,7 +122,16 @@ class _RegisterPageState extends State<RegisterPage> {
 
                 const SizedBox(height: 20),
 
-                // email textfield
+                // Name textfield
+                MyTextField(
+                  controller: nameController,
+                  hintText: 'Nama',
+                  obscureText: false,
+                ),
+
+                const SizedBox(height: 5),
+
+                // Email textfield
                 MyTextField(
                   controller: emailController,
                   hintText: 'Email',
@@ -115,7 +140,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                 const SizedBox(height: 5),
 
-                // password textfield
+                // Password textfield
                 MyTextField(
                   controller: passwordController,
                   hintText: 'Password',
@@ -124,14 +149,14 @@ class _RegisterPageState extends State<RegisterPage> {
 
                 const SizedBox(height: 5),
 
-                // confirm password textfield
+                // Confirm password textfield
                 MyTextField(
                   controller: confirmPasswordController,
                   hintText: 'Confirm Password',
                   obscureText: true,
                 ),
 
-                // error message
+                // Error message
                 if (_errorMessage.isNotEmpty) ...[
                   const SizedBox(height: 5),
                   Text(
@@ -140,7 +165,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ],
 
-                // success message
+                // Success message
                 if (_successMessage.isNotEmpty) ...[
                   const SizedBox(height: 5),
                   Text(
@@ -151,12 +176,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
                 const SizedBox(height: 5),
 
-                // sign up button
+                // Sign up button
                 MyButtonTwo(onTap: signUserUp),
 
                 const SizedBox(height: 15),
 
-                // or continue with
+                // Or continue with
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
@@ -183,23 +208,23 @@ class _RegisterPageState extends State<RegisterPage> {
 
                 const SizedBox(height: 25),
 
-                // google + apple sign in buttons
+                // Google + Apple sign in buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                    // google button
+                    // Google button
                     SquareTile(imagePath: 'assets/google.png'),
 
                     SizedBox(width: 25),
 
-                    // apple button
+                    // Apple button
                     SquareTile(imagePath: 'assets/apple.png')
                   ],
                 ),
 
                 const SizedBox(height: 15),
 
-                // not a member? sign in now
+                // Already have an account? Sign in now
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
